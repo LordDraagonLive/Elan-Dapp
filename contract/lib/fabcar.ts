@@ -2,15 +2,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-'use strict';
+import { Context, Contract } from 'fabric-contract-api';
+import { Car } from './car';
 
-const { Contract } = require('fabric-contract-api');
+export class FabCar extends Contract {
 
-class FabCar extends Contract {
-
-    async initLedger(ctx) {
+    public async initLedger(ctx: Context) {
         console.info('============= START : Initialize Ledger ===========');
-        const cars = [
+        const cars: Car[] = [
             {
                 color: 'blue',
                 make: 'Toyota',
@@ -81,7 +80,7 @@ class FabCar extends Contract {
         console.info('============= END : Initialize Ledger ===========');
     }
 
-    async queryCar(ctx, carNumber) {
+    public async queryCar(ctx: Context, carNumber: string): Promise<string> {
         const carAsBytes = await ctx.stub.getState(carNumber); // get the car from chaincode state
         if (!carAsBytes || carAsBytes.length === 0) {
             throw new Error(`${carNumber} does not exist`);
@@ -90,10 +89,10 @@ class FabCar extends Contract {
         return carAsBytes.toString();
     }
 
-    async createCar(ctx, carNumber, make, model, color, owner) {
+    public async createCar(ctx: Context, carNumber: string, make: string, model: string, color: string, owner: string) {
         console.info('============= START : Create Car ===========');
 
-        const car = {
+        const car: Car = {
             color,
             docType: 'car',
             make,
@@ -105,14 +104,13 @@ class FabCar extends Contract {
         console.info('============= END : Create Car ===========');
     }
 
-    async queryAllCars(ctx) {
+    public async queryAllCars(ctx: Context): Promise<string> {
         const startKey = 'CAR0';
         const endKey = 'CAR999';
 
         const iterator = await ctx.stub.getStateByRange(startKey, endKey);
 
         const allResults = [];
-        // eslint-disable-next-line no-constant-condition
         while (true) {
             const res = await iterator.next();
 
@@ -138,34 +136,14 @@ class FabCar extends Contract {
         }
     }
 
-    async querySingleCar(ctx, key) {
-        console.log('Key is ' + key);
-        const res = await ctx.stub.getState(key);
-        if (res){
-            console.log('Result is\n' + JSON.parse(res.toString()));
-            let Record;
-            try {
-                Record = JSON.parse(res.toString('utf8'));
-            } catch (err) {
-                console.log(err);
-                Record = res.toString('utf8');
-            }
-            return JSON.stringify([{ key, Record }]);
-        }
-        else{
-            console.err('Did not find the car with carNo ' + key);
-            return [];
-        }
-    }
-
-    async changeCarOwner(ctx, carNumber, newOwner) {
+    public async changeCarOwner(ctx: Context, carNumber: string, newOwner: string) {
         console.info('============= START : changeCarOwner ===========');
 
         const carAsBytes = await ctx.stub.getState(carNumber); // get the car from chaincode state
         if (!carAsBytes || carAsBytes.length === 0) {
             throw new Error(`${carNumber} does not exist`);
         }
-        const car = JSON.parse(carAsBytes.toString());
+        const car: Car = JSON.parse(carAsBytes.toString());
         car.owner = newOwner;
 
         await ctx.stub.putState(carNumber, Buffer.from(JSON.stringify(car)));
@@ -173,5 +151,3 @@ class FabCar extends Contract {
     }
 
 }
-
-module.exports = FabCar;
