@@ -131,6 +131,12 @@ export class FabCar extends Contract {
                 console.log('end of data');
                 await iterator.close();
                 console.info(allResults);
+                // var jsonRes;
+                // try {
+                //     jsonRes = JSON.stringify(allResults);
+                // } catch (error) {
+                //     throw error;
+                // }
                 return JSON.stringify(allResults);
             }
         }

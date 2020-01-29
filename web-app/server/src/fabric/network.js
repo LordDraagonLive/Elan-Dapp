@@ -46,7 +46,7 @@ exports.createCar = async function(key, make, model, color, owner) {
         const network = await gateway.getNetwork('mychannel');
 
         // Get the contract from the network.
-        const contract = network.getContract('fabcar');
+        const contract = network.getContract('elan');
 
         // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
@@ -93,7 +93,7 @@ exports.changeCarOwner = async function(key, newOwner) {
         const network = await gateway.getNetwork('mychannel');
 
         // Get the contract from the network.
-        const contract = network.getContract('fabcar');
+        const contract = network.getContract('elan');
 
         // Submit the specified transaction.
         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
@@ -142,7 +142,7 @@ exports.queryAllCars = async function() {
         const network = await gateway.getNetwork('mychannel');
 
         // Get the contract from the network.
-        const contract = network.getContract('fabcar');
+        const contract = network.getContract('elan');
 
         // Evaluate the specified transaction.
         // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
@@ -188,7 +188,7 @@ exports.querySingleCar = async function(key) {
         const network = await gateway.getNetwork('mychannel');
 
         // Get the contract from the network.
-        const contract = network.getContract('fabcar');
+        const contract = network.getContract('elan');
 
         // Evaluate the specified transaction.
         // queryCar transaction - requires 1 argument, ex: 'querySingleCar('CAR0')'
