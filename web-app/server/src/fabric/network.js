@@ -20,7 +20,7 @@ const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
 const ccp = JSON.parse(ccpJSON);
 
 // create car transaction
-exports.createCar = async function(key, make, model, color, owner) {
+exports.createBackup = async function(key, backupTitle, fileHash, filePath, fileName, backupDateTime) {
     let response = {};
     try {
 
@@ -50,13 +50,13 @@ exports.createCar = async function(key, make, model, color, owner) {
 
         // Submit the specified transaction.
         // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
-        await contract.submitTransaction('createCar', key, make, model, color, owner);
+        await contract.submitTransaction('createBackup', key, backupTitle, fileHash, filePath, fileName, backupDateTime);
         console.log('Transaction has been submitted');
 
         // Disconnect from the gateway.
         await gateway.disconnect();
 
-        response.msg = 'createCar Transaction has been submitted';
+        response.msg = 'createBackup Transaction has been submitted';
         return response;
 
     } catch (error) {
@@ -67,58 +67,58 @@ exports.createCar = async function(key, make, model, color, owner) {
 };
 
 // change car owner transaction
-exports.changeCarOwner = async function(key, newOwner) {
-    let response = {};
-    try {
+// exports.changeCarOwner = async function(key, newOwner) {
+//     let response = {};
+//     try {
 
-        // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), '/wallet');
-        const wallet = new FileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+//         // Create a new file system based wallet for managing identities.
+//         const walletPath = path.join(process.cwd(), '/wallet');
+//         const wallet = new FileSystemWallet(walletPath);
+//         console.log(`Wallet path: ${walletPath}`);
 
-        // Check to see if we've already enrolled the user.
-        const userExists = await wallet.exists(userName);
-        if (!userExists) {
-            console.log('An identity for the user ' + userName + ' does not exist in the wallet');
-            console.log('Run the registerUser.js application before retrying');
-            response.error = 'An identity for the user ' + userName + ' does not exist in the wallet. Register ' + userName + ' first';
-            return response;
-        }
+//         // Check to see if we've already enrolled the user.
+//         const userExists = await wallet.exists(userName);
+//         if (!userExists) {
+//             console.log('An identity for the user ' + userName + ' does not exist in the wallet');
+//             console.log('Run the registerUser.js application before retrying');
+//             response.error = 'An identity for the user ' + userName + ' does not exist in the wallet. Register ' + userName + ' first';
+//             return response;
+//         }
 
-        // Create a new gateway for connecting to our peer node.
-        const gateway = new Gateway();
-        await gateway.connect(ccp, { wallet, identity: userName, discovery: gatewayDiscovery });
+//         // Create a new gateway for connecting to our peer node.
+//         const gateway = new Gateway();
+//         await gateway.connect(ccp, { wallet, identity: userName, discovery: gatewayDiscovery });
 
-        // Get the network (channel) our contract is deployed to.
-        const network = await gateway.getNetwork('mychannel');
+//         // Get the network (channel) our contract is deployed to.
+//         const network = await gateway.getNetwork('mychannel');
 
-        // Get the contract from the network.
-        const contract = network.getContract('elan');
+//         // Get the contract from the network.
+//         const contract = network.getContract('elan');
 
-        // Submit the specified transaction.
-        // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
-        await contract.submitTransaction('changeCarOwner', key, newOwner);
-        console.log('Transaction has been submitted');
+//         // Submit the specified transaction.
+//         // changeCarOwner transaction - requires 2 args , ex: ('changeCarOwner', 'CAR10', 'Dave')
+//         await contract.submitTransaction('changeCarOwner', key, newOwner);
+//         console.log('Transaction has been submitted');
 
-        // Disconnect from the gateway.
-        await gateway.disconnect();
+//         // Disconnect from the gateway.
+//         await gateway.disconnect();
 
-        response.msg = 'changeCarOwner Transaction has been submitted';
-        return response;
+//         response.msg = 'changeCarOwner Transaction has been submitted';
+//         return response;
 
-    } catch (error) {
-        console.error(`Failed to submit transaction: ${error}`);
-        response.error = error.message;
-        return response;
-    }
-};
+//     } catch (error) {
+//         console.error(`Failed to submit transaction: ${error}`);
+//         response.error = error.message;
+//         return response;
+//     }
+// };
 
 // query all cars transaction
-exports.queryAllCars = async function() {
+exports.queryAllBackups = async function() {
 
     let response = {};
     try {
-        console.log('queryAllCars');
+        console.log('queryAllBackups');
 
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), '/wallet');
@@ -146,7 +146,7 @@ exports.queryAllCars = async function() {
 
         // Evaluate the specified transaction.
         // queryAllCars transaction - requires no arguments, ex: ('queryAllCars')
-        const result = await contract.evaluateTransaction('queryAllCars');
+        const result = await contract.evaluateTransaction('queryAllBackups');
         //console.log('check6');
         //console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
@@ -160,11 +160,11 @@ exports.queryAllCars = async function() {
 };
 
 // query the car identified by key
-exports.querySingleCar = async function(key) {
+exports.queryBackup = async function(key) {
 
     let response = {};
     try {
-        console.log('querySingleCar');
+        console.log('queryBackup');
 
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), '/wallet');
@@ -193,7 +193,7 @@ exports.querySingleCar = async function(key) {
         // Evaluate the specified transaction.
         // queryCar transaction - requires 1 argument, ex: 'querySingleCar('CAR0')'
         console.log(key);
-        const result = await contract.evaluateTransaction('querySingleCar', key);
+        const result = await contract.evaluateTransaction('queryBackup', key);
         //console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
         return result;

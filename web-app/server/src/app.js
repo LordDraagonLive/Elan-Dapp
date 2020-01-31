@@ -13,43 +13,43 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-app.get('/queryAllCars', (req, res) => {
-    network.queryAllCars()
+app.get('/queryAllBackups', (req, res) => {
+    network.queryAllBackups()
         .then((response) => {
-            let carsRecord = JSON.parse(response);
-            res.send(carsRecord);
+            let backupsRecord = JSON.parse(response);
+            res.send(backupsRecord);
         });
 });
 
-app.get('/querySingleCar', (req, res) => {
+app.get('/queryBackup', (req, res) => {
     console.log(req.query.key);
-    network.querySingleCar(req.query.key)
+    network.queryBackup(req.query.key)
         .then((response) => {
-            let carsRecord = JSON.parse(response);
-            res.send(carsRecord);
+            let backupsRecord = JSON.parse(response);
+            res.send(backupsRecord);
         });
 });
 
-app.post('/createCar', (req, res) => {
+app.post('/createBackup', (req, res) => {
     console.log(req.body);
-    network.queryAllCars()
+    network.queryAllBackups()
         .then((response) => {
             console.log(response);
-            let carsRecord = JSON.parse(response);
-            let numCars = carsRecord.length;
-            let newKey = 'CAR' + numCars;
-            network.createCar(newKey, req.body.make, req.body.model, req.body.color, req.body.owner)
+            let backupsRecord = JSON.parse(response);
+            let backupsCount = backupsRecord.length;
+            let newKey = 'ELAN' + backupsCount;
+            network.createBackup(newKey, req.body.backupTile, req.body.filePath, req.body.fileName, req.body.backupDateTime, req.body.fileHash)
                 .then((response) => {
                     res.send(response);
                 });
         });
 });
 
-app.post('/changeCarOwner', (req, res) => {
-    network.changeCarOwner(req.body.key, req.body.newOwner)
-        .then((response) => {
-            res.send(response);
-        });
-});
+// app.post('/changeCarOwner', (req, res) => {
+//     network.changeCarOwner(req.body.key, req.body.newOwner)
+//         .then((response) => {
+//             res.send(response);
+//         });
+// });
 
 app.listen(process.env.PORT || 8081);
