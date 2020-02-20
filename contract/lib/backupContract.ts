@@ -70,7 +70,15 @@ export class FabBackup extends Contract {
     }
 
     public async queryBackup(ctx: Context, backupID: string): Promise<string> {
-        const backupAsBytes = await ctx.stub.getState(backupID); // get the backup from chaincode state
+        
+        let backupAsBytes;
+
+        try {
+            backupAsBytes = await ctx.stub.getState(backupID); // get the backup from chaincode state
+        } catch (error) {
+            throw new Error(`${backupID} does not exist`);
+        }
+        
         if (!backupAsBytes || backupAsBytes.length === 0) {
             throw new Error(`${backupID} does not exist`);
         }

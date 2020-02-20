@@ -38,7 +38,7 @@ app.post('/createBackup', (req, res) => {
             let backupsRecord = JSON.parse(response);
             let backupsCount = backupsRecord.length;
             let newKey = 'ELAN' + backupsCount;
-            network.createBackup(newKey, req.body.backupTile, req.body.filePath, req.body.fileName, req.body.backupDateTime, req.body.fileHash)
+            network.createBackup(newKey, req.body.backupTitle, req.body.filePath, req.body.fileName, req.body.backupDateTime, req.body.fileHash)
                 .then((response) => {
                     res.send(response);
                 });

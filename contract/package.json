@@ -1,6 +1,6 @@
 {
     "name": "elan",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Elan Decentralized Android Data Backup Agent",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
