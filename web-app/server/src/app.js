@@ -32,6 +32,7 @@ const backuptToIPFS = async (req) => {
 
     // const uploadBackup = await ipfs.add(backedUpFile);
     // console.log("Backed up hash of file" + uploadBackup[0].path);
+    
     return 'uploadBackup[0].hash';
 }
 
@@ -96,7 +97,7 @@ app.get('/queryFileIPFS', async (req, res) => {
                 // Web browser will handle response in an appropriate manner.
                 res.writeHead(200, {
                 });
-                
+
                 fs.createReadStream(downloadedFile).pipe(res);
             } else {
                 res.writeHead(400, { "Content-Type": "text/plain" });
