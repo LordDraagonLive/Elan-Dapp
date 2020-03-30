@@ -96,6 +96,7 @@ app.get('/queryFileIPFS', async (req, res) => {
                 // Web browser will handle response in an appropriate manner.
                 res.writeHead(200, {
                 });
+                
                 fs.createReadStream(downloadedFile).pipe(res);
             } else {
                 res.writeHead(400, { "Content-Type": "text/plain" });
