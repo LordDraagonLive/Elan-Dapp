@@ -1,6 +1,6 @@
 {
     "name": "elan",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "Elan Decentralized Android Data Backup Agent",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
@@ -22,7 +22,9 @@
     "license": "Apache-2.0",
     "dependencies": {
         "fabric-contract-api": "~1.4.0",
-        "fabric-shim": "~1.4.0"
+        "fabric-shim": "~1.4.0",
+        "node-gyp": "^6.1.0",
+        "rebuild": "^0.1.2"
     },
     "devDependencies": {
         "@types/chai": "^4.1.7",

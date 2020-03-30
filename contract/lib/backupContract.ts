@@ -92,10 +92,10 @@ export class FabBackup extends Contract {
         const backup: Backup = {
             docType: 'backup',
             backupTitle,
+            fileHash,
             filePath,
             fileName,
-            backupDateTime,
-            fileHash
+            backupDateTime
         };
 
         await ctx.stub.putState(backupID, Buffer.from(JSON.stringify(backup)));
