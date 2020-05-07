@@ -1,11 +1,22 @@
-import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
-import ElanHome from './src/ElanHome';
-import CreateBackup from './src/CreateBackup';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
 
-const AppStack = createStackNavigator({
-  ElanHome: ElanHome,
-  CreateBackup: CreateBackup
-});
+import React, { Component } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 
-export default createAppContainer(AppStack);
+
+import MainStackNavigator from './MainStackNavigator'
+
+export default function App() {
+  return <MainStackNavigator />
+}
