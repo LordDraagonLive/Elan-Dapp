@@ -26,6 +26,8 @@ import { FlatHeader, Group } from "react-native-flat-header";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import RNFS from 'react-native-fs';
+
 
 export class Backups extends Component {
  
@@ -63,6 +65,69 @@ export class Backups extends Component {
         .catch((err) => {
           console.log(err);
         })
+    }
+
+    async downloadBackup(record) {
+
+      let hash = record.fileHash.split('/')
+      // console.log(hash[4])
+      hash = hash[4];
+      let filePath = record.filePath;
+      let fileName = record.fileName;
+      // console.log(hash)
+
+      // var downloadUrl = 'http://192.168.1.100:8080/ipfs/QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw';
+      // var downloadUrl = 'http://192.168.1.100:7171/queryFileIPFS?key=QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw&filename=20200330_054538.jpg';
+      var downloadUrl = 'http://192.168.1.100:7171/queryFileIPFS?key='+hash +'&filename='+fileName;
+      // var filePath = "/storage/emulated/0/DCIM/Screenshots/Screenshot_20200501-131323_YouTube.jpg";
+      // var filePath = "/storage/326E-0FE2/DCIM/Camera/20200330_054538.jpg";
+      // var fileURI = "file://com.android.providers.media.documents/document/image%3A8643";
+      var fileURI = "content://com.android.providers.media.documents/document/image%3A11618";
+      // var fileName = "20200330_054538.jpg";
+  
+      try {
+        // let options = {
+        //   fromUrl: downloadUrl,
+        //   toFile: filePath,
+        //   begin: (res) => {
+        //     console.log(res)
+        //   },
+        //   progress: (data) => {
+        //     console.log(data)
+        //   },
+        //   background: true,
+        //   progressDivider: 1
+        // }
+        // console.log(options)
+        // const request = await RNFS.downloadFile(options).promise
+        // console.log(request)
+        RNFS.downloadFile({
+          fromUrl: downloadUrl,
+          toFile: filePath,
+          background: true,
+  
+        }).promise.then((res) => {
+          console.log('result In');
+          console.log(res);
+  
+          RNFS.exists(filePath).then((exists) => {
+  
+            console.log(exists);
+            console.log('exists');
+            alert('Backup Restored successfully\n File path:'+filePath)
+  
+          });
+        }).catch((e) => {
+          // return Promise.reject(e);
+          console.log('promise returned!');
+          // console.log(e);
+          // alert('Backup Restored successfully\n File path:'+filePath)
+  
+        });
+  
+      } catch (e) {
+        console.log(e)
+      }
     }
   
   
@@ -116,6 +181,7 @@ export class Backups extends Component {
             <Button
                 title="Restore"
                 color="#0066A2"
+                onPress={() => this.downloadBackup(val.Record)}
               />
           </Card>
         });
