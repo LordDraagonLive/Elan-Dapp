@@ -43,6 +43,12 @@ export class Backups extends Component {
       }
       this.getAllBackups();
     }
+
+    componentDidMount() {
+      this.focusListener = this.props.navigation.addListener('focus',
+          () => this.getAllBackups())
+    }
+  
   
     async getAllBackups() {
       return fetch(this.queryAllBackups)
@@ -109,7 +115,7 @@ export class Backups extends Component {
   
             <Button
                 title="Restore"
-                color="#541684"
+                color="#0066A2"
               />
           </Card>
         });
