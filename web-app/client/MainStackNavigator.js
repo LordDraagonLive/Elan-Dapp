@@ -9,6 +9,7 @@ import Backups from './backups';
 
 const Stack = createStackNavigator()
 
+// Add the avaialble views to the stack navigator and also set the default view
 function MainStackNavigator() {
   return (
     <NavigationContainer>

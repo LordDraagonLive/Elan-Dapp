@@ -17,6 +17,7 @@ import {
 
 import MainStackNavigator from './MainStackNavigator'
 
+// Calll main stack navigator to handle all navigations
 export default function App() {
   return <MainStackNavigator />
 }

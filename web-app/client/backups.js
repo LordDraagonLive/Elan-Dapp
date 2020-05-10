@@ -23,20 +23,21 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { FlatHeader, Group } from "react-native-flat-header";
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RNFS from 'react-native-fs';
 
-
+/// Backups class handles viewing the data backups and restoring the backups
 export class Backups extends Component {
  
-    queryAllBackups = "http://192.168.1.100:7171/queryAllBackups";
-    queryFileIPFS = "http://192.168.1.100:7171/queryFileIPFS?key=QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw&filename=20200330_054538.jpg";
-    createBackup = "http://192.168.1.100:7171/createBackup"
+    // URL's that are used
+    queryAllBackups = "http://192.168.1.101:7171/queryAllBackups";
+    queryFileIPFS = "http://192.168.1.101:7171/queryFileIPFS?key=QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw&filename=20200330_054538.jpg";
+    createBackup = "http://192.168.1.101:7171/createBackup"
   
   
-  
+  // constructor, call the getAllBackups function everytime
+  // to refresh the list
     constructor(props) {
       super(props);
       this.state = {
@@ -46,12 +47,15 @@ export class Backups extends Component {
       this.getAllBackups();
     }
 
+    // refresh the backups list everytime focus is gained
     componentDidMount() {
       this.focusListener = this.props.navigation.addListener('focus',
           () => this.getAllBackups())
     }
   
   
+    // downloads backup details and set them to
+    // the data soruce obj
     async getAllBackups() {
       return fetch(this.queryAllBackups)
         .then((response) => response.json())
@@ -67,8 +71,11 @@ export class Backups extends Component {
         })
     }
 
+    // Uses the URL to get the selcted backuo and 
+    // restore it in the file system
     async downloadBackup(record) {
 
+      // extract reccord details
       let hash = record.fileHash.split('/')
       // console.log(hash[4])
       hash = hash[4];
@@ -76,9 +83,9 @@ export class Backups extends Component {
       let fileName = record.fileName;
       // console.log(hash)
 
-      // var downloadUrl = 'http://192.168.1.100:8080/ipfs/QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw';
-      // var downloadUrl = 'http://192.168.1.100:7171/queryFileIPFS?key=QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw&filename=20200330_054538.jpg';
-      var downloadUrl = 'http://192.168.1.100:7171/queryFileIPFS?key='+hash +'&filename='+fileName;
+      // var downloadUrl = 'http://192.168.1.101:8080/ipfs/QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw';
+      // var downloadUrl = 'http://192.168.1.101:7171/queryFileIPFS?key=QmZckVGtwsEechjvPsxT83MuqaB9GFPh2HK85SZuJSbTjw&filename=20200330_054538.jpg';
+      var downloadUrl = 'http://192.168.1.101:7171/queryFileIPFS?key='+hash +'&filename='+fileName;
       // var filePath = "/storage/emulated/0/DCIM/Screenshots/Screenshot_20200501-131323_YouTube.jpg";
       // var filePath = "/storage/326E-0FE2/DCIM/Camera/20200330_054538.jpg";
       // var fileURI = "file://com.android.providers.media.documents/document/image%3A8643";
@@ -101,6 +108,7 @@ export class Backups extends Component {
         // console.log(options)
         // const request = await RNFS.downloadFile(options).promise
         // console.log(request)
+        // Rn fs download file
         RNFS.downloadFile({
           fromUrl: downloadUrl,
           toFile: filePath,
@@ -131,9 +139,9 @@ export class Backups extends Component {
     }
   
   
-  
+    // Render the view
     render() {
-  
+      // display loading icon
       if (this.state.isLoading) {
         return (
           <View style={styles.container}>

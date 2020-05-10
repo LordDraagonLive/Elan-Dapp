@@ -21,17 +21,21 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+// import custom UI libs
 import { FlatHeader, Group } from "react-native-flat-header";
 import { Card, Divider, CheckBox } from 'react-native-elements';
-
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
+// Import backup related libs
 import RNFS from 'react-native-fs';
 import FilePickerManager from 'react-native-file-picker';
 
+/// Creating a class 'CreateBackup' to handle the process of creating backups
+/// and adding it to the blockchain netowrk
 export class CreateBackup extends Component {
 
+  // add the required vars to be initiated in the constructor
     constructor(props) {
         super(props);
         this.state = {
@@ -45,20 +49,21 @@ export class CreateBackup extends Component {
         }
     }
 
+    // allows the backup title to be set to the state
     handleInput = (text) => {
         this.setState({ backupTitle: text })
         console.log(this.state.backupTitle)
     }
 
+    /// handle messages checkbox
     handleMessages(){
-
       if (this.state.messagesCheck) {
         this.setState({ messagesCheck: false })
       } else {
         this.setState({ messagesCheck: true })
       }
-
     }
+    /// handle contacts checkbox
     handleContacts(){
       if (this.state.contactsCheck) {
         this.setState({ contactsCheck: false })
@@ -68,11 +73,14 @@ export class CreateBackup extends Component {
     }
 
     // using npm install react-native-file-picker@latest --save
+    /// Used for picking single/multiple files from the
+    /// system's file system and setting it to the state obj
     async rnFilePicker() {
 
         FilePickerManager.showFilePicker(null, (response) => {
             console.log('Response = ', response.fileName);
 
+            // if user cancels the file picking
             if (response.didCancel) {
                 console.log('User cancelled file picker');
                 alert('No files were picked!')
@@ -81,9 +89,11 @@ export class CreateBackup extends Component {
                 console.log('FilePickerManager Error: ', response.error);
             }
             else {
+              // set the file to the state obj
                 this.setState({
                     singleFileOBJ: response
                 });
+                // add the picked files to the view
                 let records = <Card containerStyle={styles.card}>
                 {/* <Text style={styles.sectionTitle}></Text> */}
                 <Text style={styles.sectionDescription}>
@@ -101,29 +111,37 @@ export class CreateBackup extends Component {
     }
 
 
-  // Backup Selected files  
+  /// Backup Selected files  to the IPFS server and
+  /// and then call the API function to add to the
+  /// HLF ledger
   async uploadToNode() {
 
     this.setState({ isLoading: true });
 
+    // Extract file details
     let filePath = this.state.singleFileOBJ.path;
     let fileName = this.state.singleFileOBJ.fileName;
     let fileType = this.state.singleFileOBJ.type;
 
-    let uploadURL = 'http://192.168.1.100:7171/uploadToIpfs';
+    // Upload URL
+    let uploadURL = 'http://192.168.1.101:7171/uploadToIpfs';
 
+    // Testing
     console.log(`Real Path: ${filePath}`);
 
+    // upload begin status
     const uploadBegin = (response) => {
       const jobId = response.jobId;
       console.log('UPLOAD HAS BEGAN! JobId: ' + jobId);
     };
 
+    // upload progress status
     const uploadProgress = (response) => {
       const percentage = Math.floor((response.totalBytesSent / response.totalBytesExpectedToSend) * 100);
       console.log('UPLOAD IS ' + percentage + '% DONE!');
     };
 
+    // checks if the filepath refers to the file in the system
     RNFS.exists(filePath).then((response) => {
       console.log(response);
     });
@@ -131,6 +149,7 @@ export class CreateBackup extends Component {
     // var newRealPath = ((await RNFS.stat(filePath)).originalFilepath);
     // console.log(`New Real Path: ${newRealPath}`);
 
+    // upload file using RN fs lib
     setTimeout(() => {
       RNFS.uploadFiles({
         toUrl: uploadURL,
@@ -179,16 +198,18 @@ export class CreateBackup extends Component {
         }
         console.log(err);
       });
-    }, 2000);
+    }, 2000); // set a timeout
     this.setState({ isLoading: false });
   }
 
+  /// uploads the backup details
   async uploadToHLF(fileName, filePath, fileHash) {
+    // Get time and title
     var backupDateTime = new Date();
     var backupTitle = this.state.backupTitle;
 
     try {
-      var response = await fetch('http://192.168.1.100:7171/createBackup', {
+      var response = await fetch('http://192.168.1.101:7171/createBackup', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -212,7 +233,7 @@ export class CreateBackup extends Component {
   }
 
 
-
+  // render the view
     render() {
 
         return (
@@ -303,7 +324,7 @@ export class CreateBackup extends Component {
 
 export default CreateBackup
 
-
+/// CSS styling
 const styles = StyleSheet.create({
     container: {
         flex: 1,
