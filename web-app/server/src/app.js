@@ -22,7 +22,7 @@ app.use(cors());
 app.use(fileUpload({ createParentPath: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+// send the buffer file to IPFS and retreive the hash location
 const backuptToIPFS = async (req) => {
     const backedUpFile = {
         content: Buffer.from(req.data)
@@ -39,10 +39,12 @@ const backuptToIPFS = async (req) => {
     return 'uploadBackup[0].hash';
 }
 
+// get the stored data backup from IPFS
 const retrieveBackupFromIPFS = async (req, fileName) => {
     const filePath = req;
     fileName = "backups/" + fileName;
 
+    // create write stream from the IPFS file
     const file = fs.createWriteStream(fileName);
     const request = http.get("http://127.0.0.1:8080/ipfs/" + filePath, function (response) {
         response.pipe(file);
@@ -93,6 +95,7 @@ const retrieveBackupFromIPFS = async (req, fileName) => {
     // }))
 }
 
+// route to query all backups
 app.get('/queryAllBackups', (req, res) => {
     network.queryAllBackups()
         .then((response) => {
@@ -101,6 +104,7 @@ app.get('/queryAllBackups', (req, res) => {
         });
 });
 
+// route to query single backup
 app.get('/queryBackup', (req, res) => {
     console.log(req.query.key);
     network.queryBackup(req.query.key)
@@ -110,6 +114,7 @@ app.get('/queryBackup', (req, res) => {
         });
 });
 
+// route to get the file from IPFS
 app.get('/queryFileIPFS', async (req, res) => {
     console.log(req.query.key);
     console.log("Works : " + req.query.filename);
@@ -163,6 +168,7 @@ app.get('/queryFileIPFS', async (req, res) => {
     }
 });
 
+// crete backup route which adds the backup details to HLF
 app.post('/createBackup', (req, res) => {
     console.log(req.body);
     network.queryAllBackups()
@@ -178,6 +184,7 @@ app.post('/createBackup', (req, res) => {
         });
 });
 
+// route to upload the file client sends to the IPFS
 app.post('/uploadToIpfs', async (req, res) => {
 
     try {

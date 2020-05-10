@@ -19,7 +19,7 @@ const ccpPath = path.join(process.cwd(), connection_file);
 const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
 const ccp = JSON.parse(ccpJSON);
 
-// create car transaction
+// create backup transaction
 exports.createBackup = async function(key, backupTitle, fileHash, filePath, fileName, backupDateTime) {
     let response = {};
     try {
@@ -49,7 +49,6 @@ exports.createBackup = async function(key, backupTitle, fileHash, filePath, file
         const contract = network.getContract('elan');
 
         // Submit the specified transaction.
-        // createCar transaction - requires 5 argument, ex: ('createCar', 'CAR12', 'Honda', 'Accord', 'Black', 'Tom')
         await contract.submitTransaction('createBackup', key, backupTitle, fileHash, filePath, fileName, backupDateTime);
         console.log('Transaction has been submitted');
 
@@ -113,7 +112,7 @@ exports.createBackup = async function(key, backupTitle, fileHash, filePath, file
 //     }
 // };
 
-// query all cars transaction
+// query all backups transaction
 exports.queryAllBackups = async function() {
 
     let response = {};
@@ -159,7 +158,7 @@ exports.queryAllBackups = async function() {
     }
 };
 
-// query the car identified by key
+// query the backup identified by key
 exports.queryBackup = async function(key) {
 
     let response = {};
